@@ -1,0 +1,5 @@
+CREATE DATABASE projeto;
+
+CREATE USER phcruz WITH PASSWORD 'phcruz';
+
+GRANT ALL PRIVILEGES ON DATABASE projeto TO phcruz;

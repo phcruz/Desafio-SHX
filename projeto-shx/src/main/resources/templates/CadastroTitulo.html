@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Cadastro de Títulos</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap-datepicker.standalone.min.css}" />
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse navbar-static-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-navegacao" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span> <b class="b-menu">Menu</b> <i class="fa fa-bars"></i>
+	      </button>
+	      <a class="navbar-brand" href="#"> <img alt="Projeto SHX" th:src="@{/images/ic_logo.png}" /></a>
+	    </div>
+	
+	    <div class="collapse navbar-collapse" id="menu-navegacao">
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a class="page-scroll" th:href="@{/clientes/}">Clientes</a></li>
+			<li><a class="page-scroll" th:href="@{/titulos/}">Títulos</a></li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+
+	<form class="form-horizontal" method="POST" th:action="@{/titulos}" th:object="${titulo}">
+		<div class="alert alert-success" th:if="${!#strings.isEmpty(mensagem)}">
+			<span th:text="${mensagem}">Título salvo com sucesso!!!</span>
+		</div>
+		<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+			<div th:each="detailedError : ${#fields.detailedErrors()}">
+				<span th:text="${detailedError.message}"></span>
+			</div>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="clearfix">
+					<h1 class="panel-title aw-titulo-panel">Novo título</h1>
+					<a class="btn btn-link aw-link-panel" th:href="@{/titulos}">Voltar para pesquisa</a>
+				</div>
+			</div>
+
+			<div class="panel-body">
+				<div class="form-group" th:classappend="${#fields.hasErrors('idCliente')} ? has-error">
+					<label for="idCliente" class="col-sm-2 control-label">Cliente</label>
+					<div class="col-sm-4">
+						<select class="form-control" id="idCliente" th:field="*{idCliente}">
+							<option value="0">Selecione</option>
+							<option th:each="cl : ${todosClientesCadastrados}" th:value="${cl.id}" th:text="${cl.nome}"></option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group" th:classappend="${#fields.hasErrors('dataEmissao')} ? has-error">
+					<label for="dataEmissao" class="col-sm-2 control-label">Data de Emissão</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="dataEmissao"
+							th:field="*{dataEmissao}" data-provide="datepicker"
+							data-date-format="dd/mm/yyyy" data-date-language="pt-BR"
+							data-date-autoclose="true" data-date-today-highlight="true"
+							data-date-orientation="bottom" 
+							onkeypress="$(this).mask('00/00/0000');" />
+					</div>
+				</div>
+				<div class="form-group" th:classappend="${#fields.hasErrors('parcelas')} ? has-error">
+					<label for="parcelas" class="col-sm-2 control-label">Qtde. parcelas</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="parcelas" th:field="*{parcelas}" />
+					</div>
+				</div>
+				<div class="form-group" th:classappend="${#fields.hasErrors('diaVencimento')} ? has-error">
+					<label for="diaVencimento" class="col-sm-2 control-label">Dia vencimento</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control" id="diaVencimento" th:field="*{diaVencimento}" />
+					</div>
+				</div>
+				<div class="form-group" th:classappend="${#fields.hasErrors('valorTotal')} ? has-error">
+					<label for="valorTotal" class="col-sm-2 control-label">Valor total</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control js-currency" id="valorTotal" th:field="*{valorTotal}" />
+					</div>
+				</div>
+				<div class="form-group" th:classappend="${#fields.hasErrors('valorMulta')} ? has-error">
+					<label for="valorMulta" class="col-sm-2 control-label">Multa atraso (%)</label>
+					<div class="col-sm-2">
+						<input type="text" class="form-control js-currency" id="valorMulta" th:field="*{valorMulta}" />
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-primary">Salvar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+</body>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/bootstrap-datepicker.min.js}"></script>
+<script th:src="@{/js/bootstrap-datepicker.pt-BR.min.js}"></script>
+<script th:src="@{/js/jquery.maskMoney.min.js}"></script>
+<script th:src="@{/js/cobranca.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport" content="width=device-width" />
+<title>Pesquisa de Clientes</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+</head>
+<body>
+
+	<nav class="navbar navbar-inverse navbar-static-top">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#menu-navegacao" aria-expanded="false">
+	        <span class="sr-only">Toggle navigation</span> <b class="b-menu">Menu</b> <i class="fa fa-bars"></i>
+	      </button>
+	      <a class="navbar-brand" href="#"> <img alt="Projeto SHX" th:src="@{/images/ic_logo.png}" /></a>
+	    </div>
+	
+	    <div class="collapse navbar-collapse" id="menu-navegacao">
+	      <ul class="nav navbar-nav navbar-right">
+	        <li><a class="page-scroll" th:href="@{/clientes/}">Clientes</a></li>
+			<li><a class="page-scroll" th:href="@{/titulos/}">Títulos</a></li>
+	      </ul>
+	    </div>
+	  </div>
+	</nav>
+
+	<section>
+		<div class="alert alert-success" th:if="${!#strings.isEmpty(mensagem)}"
+			th:classappend="${#strings.startsWith(mensagem,'Não') ? 'alert-warning' : 'alert-success'}">
+			<span th:text="${mensagem}"></span>
+		</div>
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="clearfix">
+					<h1 class="panel-title aw-titulo-panel">Pesquisa de clientes</h1>
+					<a class="btn btn-link aw-link-panel" th:href="@{/clientes/novo}">Novo cliente</a>
+				</div>
+			</div>
+
+			<div class="table-responsive">
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th class="text-center col-md-1">#</th>
+							<th class="text-center col-md-2">CPF</th>
+							<th>Nome</th>
+							<th class="text-right col-md-2">Data de nascimento</th>
+							<th class="text-center col-md-2">Opções</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="cliente : ${clientes}">
+							<td class="text-center" th:text="${cliente.id}">1</td>
+							<td class="text-center" th:text="${cliente.cpf}"></td>
+							<td th:text="${cliente.nome}"></td>
+							<td class="text-right" th:text="${{cliente.dataNascimento}}"></td>
+
+							<td class="text-center">
+								<a class="btn btn-link btn-xs"
+									th:href="@{/clientes/{codigo}(codigo=${cliente.id})}"
+									title="Editar" rel="tooltip" data-placement="top">
+								<span class="glyphicon glyphicon-pencil"></span>
+								</a>
+								<a class="btn btn-link btn-xs" data-toggle="modal"
+									data-target="#confirmacaoExclusaoModal"
+									th:attr="data-codigo=${cliente.id}, data-descricao=${cliente.nome}"
+									title="Excluir" rel="tooltip" data-placement="top">
+									<span class="glyphicon glyphicon-remove"></span>
+								</a>
+								<a class="btn btn-link btn-xs"
+									th:href="@{/titulos/{codigo}(codigo=${cliente.id})}"
+									title="Consultar títulos" rel="tooltip" data-placement="top">
+									<span class="glyphicon glyphicon-search"></span>
+								</a>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="7" th:if="${#lists.isEmpty(clientes)}">Nenhum cliente foi encontrado</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="modal fade" id="confirmacaoExclusaoModal" tabindex="-1"
+				data-keyboard="false" data-backdrop="static">
+				<div class="modal-dialog">
+					<form th:attr="data-url-base='/clientes'" th:method="delete">
+						<input type="hidden" name="_method" value="delete" />
+
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title">Você tem certeza?</h4>
+							</div>
+
+							<div class="modal-body">
+								<span>Tem certeza que deseja apagar o cliente e seus títulos?</span>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-link" data-dismiss="modal">Cancelar</button>
+								<a id="btnExcluir" href="/clientes/delete/" class="btn btn-danger">Delete</a>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+</body>
+<script th:src="@{/js/jquery-2.1.4.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+<script th:src="@{/js/jquery.maskMoney.min.js}"></script>
+<script th:src="@{/js/cobranca.js}"></script>
+</html>
